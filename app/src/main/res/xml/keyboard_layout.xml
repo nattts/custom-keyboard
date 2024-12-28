@@ -2,21 +2,6 @@
     android:keyWidth="10%p"
     android:keyHeight="50dp">
 
-    <!-- Row 1: Numbers and symbols -->
-<!--    <Row>-->
-<!--        <Key android:codes="49" android:keyLabel="1" />-->
-<!--        <Key android:codes="50" android:keyLabel="2" />-->
-<!--        <Key android:codes="51" android:keyLabel="3" />-->
-<!--        <Key android:codes="52" android:keyLabel="4" />-->
-<!--        <Key android:codes="53" android:keyLabel="5" />-->
-<!--        <Key android:codes="54" android:keyLabel="6" />-->
-<!--        <Key android:codes="55" android:keyLabel="7" />-->
-<!--        <Key android:codes="56" android:keyLabel="8" />-->
-<!--        <Key android:codes="57" android:keyLabel="9" />-->
-<!--        <Key android:codes="48" android:keyLabel="0" />-->
-<!--    </Row>-->
-
-    <!-- Row 1: Letters from q to p -->
     <Row>
         <Key android:codes="113" android:keyLabel="q" />
         <Key android:codes="119" android:keyLabel="w" />
@@ -30,9 +15,8 @@
         <Key android:codes="112" android:keyLabel="p" />
     </Row>
 
-    <!-- Row 2: Letters from a to l -->
     <Row>
-        <Key android:codes="97" android:keyLabel="a" />
+        <Key android:codes="97" android:keyLabel="a" android:horizontalGap="5%" />
         <Key android:codes="115" android:keyLabel="s" />
         <Key android:codes="100" android:keyLabel="d" />
         <Key android:codes="102" android:keyLabel="f" />
@@ -43,7 +27,6 @@
         <Key android:codes="108" android:keyLabel="l" />
     </Row>
 
-    <!-- Row 3: Letters from z to m -->
     <Row>
         <Key android:codes="-1" android:keyLabel="Shift" android:keyWidth="15%p" />
         <Key android:codes="122" android:keyLabel="z" />
@@ -56,10 +39,12 @@
         <Key android:codes="-5" android:keyLabel= "x" android:keyWidth="15%p" />
     </Row>
 
-
-    <!-- Row 4: Space, Enter, and Backspace -->
     <Row>
-        <Key android:codes="62" android:keyLabel="Space" android:keyWidth="60%p" />
-        <Key android:codes="-4" android:keyLabel="=>" android:keyWidth="20%p" />
+        <Key android:codes="777" android:keyLabel="@string/special_chars_key" android:keyWidth="15%p" />
+        <Key android:codes="788" android:keyLabel="/" />
+        <Key android:codes="799" android:keyLabel="()" />
+        <Key android:codes="62" android:keyLabel="Space" android:keyWidth="40%p" />
+        <Key android:codes="766" android:keyLabel="." />
+        <Key android:codes="-4" android:keyLabel="=>" android:keyWidth="15%p" />
     </Row>
 </Keyboard>

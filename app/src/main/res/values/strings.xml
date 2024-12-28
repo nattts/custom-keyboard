@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">custom-keyboard</string>
+    <string name="enter_text">enter text</string>
+    <string name="special_chars_key">"?123"</string>
 </resources>

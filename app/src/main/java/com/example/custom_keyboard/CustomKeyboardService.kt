@@ -11,20 +11,26 @@ import android.media.MediaPlayer
 class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
     private lateinit var keyboardView: KeyboardView
     private lateinit var keyboard: Keyboard
-    private lateinit var keySound: MediaPlayer
+    private var keySound: MediaPlayer? = null
 
     private var isCaps = false
     private var isSpecial = false
 
+    override fun onCreate() {
+        super.onCreate()
+        try {
+            keySound = MediaPlayer.create(this, R.raw.typewriter)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            keySound = null
+        }
+    }
+
     override fun onCreateInputView(): KeyboardView {
-        // Inflate the keyboard view
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         keyboard = Keyboard(this, R.xml.keyboard_layout)
         keyboardView.keyboard = keyboard
         keyboardView.setOnKeyboardActionListener(this)
-
-        // Load custom sound
-        keySound = MediaPlayer.create(this, R.raw.typewriter)
 
         return keyboardView
     }
@@ -33,7 +39,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic: InputConnection = currentInputConnection
-        keySound.start()
+        keySound?.start()
+        println("Key sound started successfully")
         when (primaryCode) {
             Keyboard.KEYCODE_DELETE -> ic.deleteSurroundingText(1, 0)
             Keyboard.KEYCODE_SHIFT -> {
@@ -73,6 +80,13 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        keySound?.release()
+    }
+
+
 
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onText(text: CharSequence?) {}
