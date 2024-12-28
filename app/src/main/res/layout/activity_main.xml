@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Your custom KeyboardView for the layout -->
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:keyBackground="@drawable/key_background"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:keyPreviewLayout="@layout/key_preview"
+        android:keyTextColor="@color/white"
+        />
+</FrameLayout>
