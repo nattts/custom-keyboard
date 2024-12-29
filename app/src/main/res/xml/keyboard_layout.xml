@@ -1,6 +1,6 @@
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="10%p"
-    android:keyHeight="50dp">
+    android:keyHeight="68dp">
 
     <Row>
         <Key android:codes="113" android:keyLabel="q" />
@@ -40,11 +40,12 @@
     </Row>
 
     <Row>
-        <Key android:codes="777" android:keyLabel="@string/special_chars_key" android:keyWidth="15%p" />
-        <Key android:codes="788" android:keyLabel="/" />
+        <Key android:codes="44" android:keyLabel="@string/special_chars_key" android:keyWidth="15%p" />
+        <Key android:codes="47" android:keyLabel="/" />
         <Key android:codes="799" android:keyLabel="()" />
         <Key android:codes="62" android:keyLabel="Space" android:keyWidth="40%p" />
-        <Key android:codes="766" android:keyLabel="." />
+        <Key android:codes="46" android:keyLabel="." />
         <Key android:codes="-4" android:keyLabel="=>" android:keyWidth="15%p" />
     </Row>
+
 </Keyboard>

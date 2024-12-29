@@ -50,14 +50,13 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             }
 
             44 -> {
-                if (!isSpecial) {
+                if (isSpecial) {
                     keyboardView.keyboard = Keyboard(this, R.xml.keyboard_layout)
                     isSpecial = !isSpecial
                 } else {
                     keyboardView.keyboard = Keyboard(this, R.xml.keyboard_special_chars)
                     isSpecial = !isSpecial
                 }
-
             }
 
             KeyEvent.KEYCODE_SPACE -> {
