@@ -39,7 +39,11 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic: InputConnection = currentInputConnection
-        keySound?.start()
+        keySound?.let {
+            it.stop() // Stop current playback if any
+            it.prepare() // Prepare it again to play from the start
+            it.start() // Play the sound
+        }
         println("Key sound started successfully")
         when (primaryCode) {
             Keyboard.KEYCODE_DELETE -> ic.deleteSurroundingText(1, 0)
