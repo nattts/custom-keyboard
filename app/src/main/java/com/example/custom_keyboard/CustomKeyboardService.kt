@@ -12,8 +12,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
     private lateinit var keyboardView: KeyboardView
     private lateinit var keyboard: Keyboard
     private var keySound: MediaPlayer? = null
-
-    private var isCaps = false
     private var isSpecial = false
 
     override fun onCreate() {
@@ -40,26 +38,27 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
         val ic: InputConnection = currentInputConnection
         keySound?.let {
-            it.stop() // Stop current playback if any
-            it.prepare() // Prepare it again to play from the start
-            it.start() // Play the sound
+            it.stop()
+            it.prepare()
+            it.start()
         }
-        println("Key sound started successfully")
+
         when (primaryCode) {
             Keyboard.KEYCODE_DELETE -> ic.deleteSurroundingText(1, 0)
             Keyboard.KEYCODE_SHIFT -> {
-                isCaps = !isCaps
-                keyboard.isShifted = isCaps
+                keyboard.isShifted = !keyboard.isShifted
                 keyboardView.invalidateAllKeys()
             }
 
-            44 -> {
+            Keyboard.KEYCODE_MODE_CHANGE -> {
                 if (isSpecial) {
-                    keyboardView.keyboard = Keyboard(this, R.xml.keyboard_layout)
-                    isSpecial = !isSpecial
+                    keyboard = Keyboard(this, R.xml.keyboard_layout)
+                    keyboardView.keyboard = keyboard
+                    isSpecial = false
                 } else {
-                    keyboardView.keyboard = Keyboard(this, R.xml.keyboard_special_chars)
-                    isSpecial = !isSpecial
+                    keyboard = Keyboard(this, R.xml.keyboard_special_chars)
+                    keyboardView.keyboard = keyboard
+                    isSpecial = true
                 }
             }
 
@@ -76,8 +75,12 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
             else -> {
                 var code = primaryCode.toChar()
-                if (Character.isLetter(code) && isCaps) {
+                if (Character.isLetter(code) && keyboard.isShifted) {
                     code = Character.toUpperCase(code)
+                    keyboard.isShifted = !keyboard.isShifted
+                    keyboardView.invalidateAllKeys()
+                } else {
+                    code = Character.toLowerCase(code)
                 }
                 ic.commitText(code.toString(), 1)
             }
@@ -88,8 +91,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         super.onDestroy()
         keySound?.release()
     }
-
-
 
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onText(text: CharSequence?) {}
@@ -112,3 +113,24 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onRelease(primaryCode: Int) {}
 }
+
+// TODO maybe to default to Android keycodes instead of ASCII
+
+//   TODO
+//    override fun onKey(primaryCode: Int, keyCodes: IntArray) {
+//        if (currentInputConnection != null) {
+//            keySound?.let {
+//                it.stop()
+//                it.prepare()
+//                it.start()
+//            }
+//            when (primaryCode) {
+//                Keyboard.KEYCODE_MODE_CHANGE -> enableSpecialCharKeyboard()
+//                44 -> enableAlphaKeyboard()
+//                Keyboard.KEYCODE_DELETE -> handleDelete()
+//                Keyboard.KEYCODE_SHIFT -> handleShift()
+//                else -> encodeCharacter(primaryCode)
+//            }
+//        }
+//    }
+
