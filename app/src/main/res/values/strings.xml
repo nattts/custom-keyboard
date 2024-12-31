@@ -2,5 +2,11 @@
     <string name="app_name">custom-keyboard</string>
     <string name="enter_text">enter text</string>
     <string name="special_chars_key">"?123"</string>
-    <string name="equal_backslash_pipe">"=/"</string>
+    <string name="equal_backslash_less">"=\&#92;&#60;"</string>
+    <string name="check">&#10003;</string>
+    <string name="erase">&#9003;</string>
+    <string name="world">&#127760;</string>
+    <string name="shift">&#x290A;</string>
+    <string name="quote">&#34;</string>
+    <string name="ampersand">&amp;</string>
 </resources>
