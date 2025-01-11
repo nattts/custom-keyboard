@@ -1,0 +1,83 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="53dp"
+    android:height="53.531dp"
+    android:viewportWidth="53"
+    android:viewportHeight="53.531">
+  <path
+      android:pathData="M5.521,0.746L47.474,0.746A4.771,4.011 0,0 1,52.244 4.758L52.244,48.779A4.771,4.011 0,0 1,47.474 52.79L5.521,52.79A4.771,4.011 0,0 1,0.75 48.779L0.75,4.758A4.771,4.011 0,0 1,5.521 0.746z"
+      android:fillColor="#656565"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M40.94,4.606h11.279v34.564h-11.279z"
+      android:fillColor="#d6d6d6"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="m43.1,7.626 l9.094,-2.971c-0.361,-2.857 -2.329,-3.846 -5.069,-3.937 -3.645,0.106 -7.203,0.26 -9.094,1.337l5.069,5.571z"
+      android:fillType="evenOdd">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="44.484"
+          android:startY="4.801"
+          android:endX="43.852"
+          android:endY="2.176"
+          android:type="linear">
+        <item android:offset="0" android:color="#FFD6D6D6"/>
+        <item android:offset="1" android:color="#FF656565"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:pathData="M9.85,39.806h33.469v12.975h-33.469z"
+      android:fillColor="#929292"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="m41.4,36.756 l10.805,1.156 0.04,10.506c-0.006,2.709 -2.167,4.266 -4.401,4.36l-4.81,-0.052 -5.324,-12.344 3.69,-3.625z"
+      android:fillType="evenOdd">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="48.262"
+          android:startY="44.007"
+          android:endX="44.077"
+          android:endY="47.263"
+          android:type="linear">
+        <item android:offset="0" android:color="#FFD6D6D6"/>
+        <item android:offset="1" android:color="#FF939393"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:pathData="m8.26,36.656 l-7.484,1.261 -0.04,10.506c0.006,2.709 2.167,4.266 4.401,4.36l4.81,-0.052 1.687,-12.292 -3.373,-3.782z"
+      android:fillType="evenOdd">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="3.537"
+          android:startY="43.56"
+          android:endX="8.316"
+          android:endY="46.817"
+          android:type="linear">
+        <item android:offset="0" android:color="#FF656565"/>
+        <item android:offset="1" android:color="#FF939393"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:pathData="M12.29,1.406L39.284,1.406A4.771,4.754 0,0 1,44.055 6.161L44.055,36.897A4.771,4.754 0,0 1,39.284 41.651L12.29,41.651A4.771,4.754 0,0 1,7.52 36.897L7.52,6.161A4.771,4.754 0,0 1,12.29 1.406z"
+      android:fillColor="#f1f1f1"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M12.29,1.406L38.23,1.406A4.771,4.754 0,0 1,43.001 6.161L43.001,36.897A4.771,4.754 0,0 1,38.23 41.651L12.29,41.651A4.771,4.754 0,0 1,7.52 36.897L7.52,6.161A4.771,4.754 0,0 1,12.29 1.406z"
+      android:fillType="evenOdd">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="18.331"
+          android:startY="21.528"
+          android:endX="34.305"
+          android:endY="21.528"
+          android:type="linear">
+        <item android:offset="0" android:color="#FFD8D8D8"/>
+        <item android:offset="1" android:color="#FFB1B1B1"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+</vector>

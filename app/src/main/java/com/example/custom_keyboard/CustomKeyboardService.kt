@@ -1,6 +1,8 @@
 @file:Suppress("DEPRECATION")
-package com.example.custom_keyboard
 
+package com.example.custom_keyboard
+import android.content.res.Configuration
+import android.graphics.Canvas
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
@@ -25,75 +27,37 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         }
     }
 
-    override fun onCreateInputView(): KeyboardView {
-        keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
-        keyboard = Keyboard(this, R.xml.keyboard_layout)
-        keyboardView.keyboard = keyboard
-        keyboardView.setOnKeyboardActionListener(this)
+//    override fun onCreateInputView(): KeyboardView {
+//        keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
+//        keyboard = Keyboard(this, R.xml.keyboard_layout)
+//        keyboardView.keyboard = keyboard
+//        keyboardView.isPreviewEnabled = false
+//        keyboardView.setOnKeyboardActionListener(this)
+//
+//        return keyboardView
+//    }
 
+//    override fun onCreateInputView(): KeyboardView {
+//        val keyboardView = CustomKeyboardView(this, null)
+//        keyboard = Keyboard(this, R.xml.keyboard_layout)
+//        keyboardView.keyboard = keyboard
+//        keyboardView.isPreviewEnabled = false
+//        keyboardView.setOnKeyboardActionListener(this)
+//        return keyboardView
+//    }
+
+    override fun onCreateInputView(): KeyboardView {
+        keyboard = Keyboard(this, R.xml.keyboard_layout) // Initialize keyboard first
+        val keyboardView = CustomKeyboardView(this, null)
+        keyboardView.setCustomKeyboard(keyboard) // Pass the keyboard explicitly after initialization
+        keyboardView.keyboard = keyboard // Set the keyboard explicitly to avoid nulls
+        keyboardView.isPreviewEnabled = false
+        keyboardView.setOnKeyboardActionListener(this)
+        this.keyboardView = keyboardView // Properly initialize the lateinit property
         return keyboardView
     }
 
-//    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
-//        super.onStartInputView(info, restarting)
-//
-//        // Load the keyboard
-//        keyboardView.keyboard = Keyboard(this, R.xml.keyboard_layout)
-//
-//        // Access the keys of the keyboard
-//        val keys = keyboardView.keyboard.keys
-//
-//        // Add margins programmatically
-//        keys.forEach { key ->
-//            when (key.codes.firstOrNull()) {
-//                97 -> { // Key 'a' (left margin)
-//                    key.x += (20 * resources.displayMetrics.density).toInt() // Add 10dp margin
-//                }
-//                108 -> { // Key 'l' (right margin)
-//                    key.x -= (20 * resources.displayMetrics.density).toInt() // Subtract 10dp margin
-//                }
-//            }
-//        }
-//
-//        // Redraw the keyboard to reflect changes
-//        keyboardView.invalidate()
-//    }
 
-
-
-//    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
-//        super.onStartInputView(info, restarting)
-//
-//        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-//        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-//
-//        val params = window?.window?.attributes
-//
-//        if (isLandscape) {
-//            val screenWidth = resources.displayMetrics.widthPixels
-//            val desiredWidth = (screenWidth * 0.9).toInt() // 90% of the screen width
-//            params?.width = desiredWidth
-//        }
-//
-//        if (isPortrait) {
-//            val screenHeight = resources.displayMetrics.heightPixels
-//            val keyboardHeight = (screenHeight * 0.3).toInt() // 40% of the screen height
-//            params?.height = keyboardHeight
-//        }
-//
-//        window?.window?.attributes = params
-//    }
-
-
-
-//    private fun adjustHorizontalGap() {
-//        keyboard = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            Keyboard(this, R.xml.keyboard_landscape_layout)
-//        } else {
-//            Keyboard(this, R.xml.keyboard_layout)
-//        }
-//        keyboardView.keyboard = keyboard
-//    }
 
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
@@ -108,7 +72,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             Keyboard.KEYCODE_DELETE -> ic.deleteSurroundingText(1, 0)
             Keyboard.KEYCODE_SHIFT -> {
                 keyboard.isShifted = !keyboard.isShifted
-                keyboardView.invalidateAllKeys()
+                (keyboardView as? CustomKeyboardView)?.updateShiftState(keyboard.isShifted)
+                // keyboardView.invalidateAllKeys()
             }
 
             Keyboard.KEYCODE_MODE_CHANGE -> {

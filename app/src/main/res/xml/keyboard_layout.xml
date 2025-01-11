@@ -1,9 +1,12 @@
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:keyWidth="10%p"
-    android:keyHeight="68dp">
+    android:keyHeight="68dp"
+    android:horizontalGap="2dp"
+    android:verticalGap="2dp"
+    >
 
     <Row>
-        <Key android:codes="113" android:keyLabel="q" android:keyEdgeFlags="left"/>
+        <Key android:codes="113" android:keyLabel="q" android:keyEdgeFlags="left" android:keyIcon="@drawable/q_test"/>
         <Key android:codes="119" android:keyLabel="w" />
         <Key android:codes="101" android:keyLabel="e" />
         <Key android:codes="114" android:keyLabel="r" />
@@ -16,7 +19,7 @@
     </Row>
 
     <Row>
-        <Key android:codes="97" android:keyLabel="a" android:horizontalGap="2.7%" android:keyEdgeFlags="left"/>
+        <Key android:codes="97" android:keyLabel="a" android:keyEdgeFlags="left"/>
         <Key android:codes="115" android:keyLabel="s" />
         <Key android:codes="100" android:keyLabel="d" />
         <Key android:codes="102" android:keyLabel="f" />
