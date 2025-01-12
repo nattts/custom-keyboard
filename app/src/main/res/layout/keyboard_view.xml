@@ -6,9 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:fitsSystemWindows="true"
-    android:keyBackground="@drawable/key_background"
     android:background="#000000"
     android:keyTextColor="#46BF4B"
     />
 
-
+    <!--    android:keyBackground="@drawable/key_background"-->

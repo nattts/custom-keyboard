@@ -13,7 +13,7 @@
         android:autofillHints="none"
         android:inputType="text"
         android:hint="@string/enter_text"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="350dp"
         android:padding="12dp" />
 
 </LinearLayout>

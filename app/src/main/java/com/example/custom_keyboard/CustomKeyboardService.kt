@@ -29,6 +29,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         keyboard = Keyboard(this, R.xml.keyboard_layout)
         keyboardView.keyboard = keyboard
+        keyboardView.isPreviewEnabled = false
         keyboardView.setOnKeyboardActionListener(this)
 
         return keyboardView
