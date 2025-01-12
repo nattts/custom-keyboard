@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="#000000"
     android:keyTextColor="#46BF4B"
-    />
+    android:keyBackground="@drawable/key_background"
 
-    <!--    android:keyBackground="@drawable/key_background"-->
+    />
+<!--    android:keyBackground="@drawable/key_background"-->

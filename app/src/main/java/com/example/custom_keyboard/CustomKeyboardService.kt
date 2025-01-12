@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION")
 package com.example.custom_keyboard
 
+import android.content.res.Configuration
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
@@ -37,63 +38,14 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
 //    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
 //        super.onStartInputView(info, restarting)
-//
-//        // Load the keyboard
-//        keyboardView.keyboard = Keyboard(this, R.xml.keyboard_layout)
-//
-//        // Access the keys of the keyboard
-//        val keys = keyboardView.keyboard.keys
-//
-//        // Add margins programmatically
-//        keys.forEach { key ->
-//            when (key.codes.firstOrNull()) {
-//                97 -> { // Key 'a' (left margin)
-//                    key.x += (20 * resources.displayMetrics.density).toInt() // Add 10dp margin
-//                }
-//                108 -> { // Key 'l' (right margin)
-//                    key.x -= (20 * resources.displayMetrics.density).toInt() // Subtract 10dp margin
-//                }
-//            }
-//        }
-//
-//        // Redraw the keyboard to reflect changes
-//        keyboardView.invalidate()
-//    }
-
-
-
-//    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
-//        super.onStartInputView(info, restarting)
-//
-//        val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 //        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-//
 //        val params = window?.window?.attributes
-//
-//        if (isLandscape) {
-//            val screenWidth = resources.displayMetrics.widthPixels
-//            val desiredWidth = (screenWidth * 0.9).toInt() // 90% of the screen width
-//            params?.width = desiredWidth
-//        }
-//
 //        if (isPortrait) {
 //            val screenHeight = resources.displayMetrics.heightPixels
-//            val keyboardHeight = (screenHeight * 0.3).toInt() // 40% of the screen height
+//            val keyboardHeight = (screenHeight * 0.4).toInt() // 40% of the screen height
 //            params?.height = keyboardHeight
 //        }
-//
 //        window?.window?.attributes = params
-//    }
-
-
-
-//    private fun adjustHorizontalGap() {
-//        keyboard = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            Keyboard(this, R.xml.keyboard_landscape_layout)
-//        } else {
-//            Keyboard(this, R.xml.keyboard_layout)
-//        }
-//        keyboardView.keyboard = keyboard
 //    }
 
     @Deprecated("Deprecated in Java", ReplaceWith(""))
@@ -123,6 +75,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
                     isSpecial = true
                 }
             }
+
 
             KeyEvent.KEYCODE_SPACE -> {
                 currentInputConnection?.commitText(" ", 1)
