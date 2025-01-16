@@ -1,20 +1,27 @@
 @file:Suppress("DEPRECATION")
 package com.example.custom_keyboard
 
-import android.content.res.Configuration
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
 import android.view.KeyEvent
 import android.view.inputmethod.InputConnection
 import android.media.MediaPlayer
-import android.view.inputmethod.EditorInfo
 
 class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
     private lateinit var keyboardView: KeyboardView
     private lateinit var keyboard: Keyboard
     private var keySound: MediaPlayer? = null
     private var isSpecial = false
+
+    private var currentLanguageIndex = 0
+    private val languageLayouts = mapOf(
+        "English" to R.xml.keyboard_layout,
+        "Russian" to R.xml.russian_layout
+    )
+    private val languages = languageLayouts.keys.toList()
+
+
 
     override fun onCreate() {
         super.onCreate()
@@ -28,6 +35,9 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     override fun onCreateInputView(): KeyboardView {
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
+
+        // loadLanguagePreference()
+
         keyboard = Keyboard(this, R.xml.keyboard_layout)
         keyboardView.keyboard = keyboard
         keyboardView.isPreviewEnabled = false
@@ -35,6 +45,37 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
         return keyboardView
     }
+
+    private fun loadLanguagePreference() {
+        val sharedPreferences = getSharedPreferences("keyboard_prefs", MODE_PRIVATE)
+        val selectedLanguage = sharedPreferences.getString("selected_language", "English")
+        println("selected Lang=> $selectedLanguage")
+        currentLanguageIndex = languages.indexOf(selectedLanguage)
+        if (currentLanguageIndex == -1) currentLanguageIndex = 0 // Fallback if saved language is invalid
+    }
+
+
+    private fun switchLanguage() {
+        currentLanguageIndex = (currentLanguageIndex + 1) % languages.size
+        val selectedLanguage = languages[currentLanguageIndex]
+
+        val layoutResId = languageLayouts[selectedLanguage] ?: R.xml.keyboard_layout
+
+        keyboard = Keyboard(this, layoutResId)
+        keyboardView.keyboard = keyboard
+        keyboardView.invalidateAllKeys()
+
+        // saveLanguagePreference()
+    }
+
+    private fun saveLanguagePreference() {
+        val sharedPreferences = getSharedPreferences("keyboard_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("selected_language", languages[currentLanguageIndex])
+        editor.apply()
+        println("CustomKeyboardService=> ${languages[currentLanguageIndex]}")
+    }
+
 
 //    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
 //        super.onStartInputView(info, restarting)
@@ -58,11 +99,14 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         }
 
         when (primaryCode) {
+            -10 -> switchLanguage()
+
             Keyboard.KEYCODE_DELETE -> ic.deleteSurroundingText(1, 0)
             Keyboard.KEYCODE_SHIFT -> {
                 keyboard.isShifted = !keyboard.isShifted
                 keyboardView.invalidateAllKeys()
             }
+
 
             Keyboard.KEYCODE_MODE_CHANGE -> {
                 if (isSpecial) {
