@@ -69,7 +69,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
 
     override fun onCreateInputView(): KeyboardView {
-        initializeLogFile()
+        // initializeLogFile()
 
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
 
