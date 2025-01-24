@@ -39,7 +39,7 @@
         <Key android:codes="1084" android:keyLabel="м" android:keyWidth="8.5%p"/>
         <Key android:codes="1080" android:keyLabel="и" android:keyWidth="8.5%p"/>
         <Key android:codes="1090" android:keyLabel="т" android:keyWidth="8.5%p"/>
-        <Key android:codes="1100" android:keyLabel="ь" android:keyWidth="8.5%p"/>
+        <Key android:codes="1100" android:keyLabel="ь" android:popupKeyboard="@xml/accent_hard_sign" android:keyWidth="8.5%p"/>
         <Key android:codes="1073" android:keyLabel="б" android:keyWidth="8.5%p"/>
         <Key android:codes="1102" android:keyLabel="ю" android:keyWidth="8.5%p"/>
         <Key android:codes="-5" android:keyLabel="@string/erase" android:isRepeatable="true" android:keyWidth="11.5%p" android:keyEdgeFlags="right"/>

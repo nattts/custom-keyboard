@@ -1,13 +1,3 @@
-<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
-<!--    <item android:top="10dp" android:bottom="2dp" android:right="2dp" android:left="2dp">-->
-<!--        <shape>-->
-<!--            <corners android:radius="5dp" />-->
-<!--            <stroke android:width="2dp" android:color="#1D77A0"/>-->
-<!--        </shape>-->
-<!--    </item>-->
-<!--</layer-list>-->
-
-
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Pressed state -->
     <item android:state_pressed="true">
@@ -15,8 +5,8 @@
             <item android:top="10dp" android:bottom="2dp" android:right="2dp" android:left="2dp">
                 <shape>
                     <corners android:radius="5dp" />
-                    <stroke android:width="2dp" android:color="#FF0000"/> <!-- Red stroke when pressed -->
-                    <solid android:color="#FFE5E5"/> <!-- Light red background when pressed -->
+                    <stroke android:width="2dp" android:color="#FF0000"/>
+                    <solid android:color="#FFE5E5"/>
                 </shape>
             </item>
         </layer-list>
@@ -28,7 +18,7 @@
             <item android:top="10dp" android:bottom="2dp" android:right="2dp" android:left="2dp">
                 <shape>
                     <corners android:radius="5dp" />
-                    <stroke android:width="2dp" android:color="#1D77A0"/> <!-- Default blue stroke -->
+                    <stroke android:width="2dp" android:color="#1D77A0"/>
                 </shape>
             </item>
         </layer-list>

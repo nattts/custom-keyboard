@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
@@ -34,7 +35,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
     private var currentLanguageIndex = 0
     private val languageLayouts = mapOf(
         "English" to R.xml.keyboard_layout,
-        "Russian" to R.xml.russian_layout
+        "Russian" to R.xml.russian_layout,
+        "Latvian" to R.xml.latvian_layout
     )
     private val languages = languageLayouts.keys.toList()
 
@@ -174,6 +176,12 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
             keyboard = Keyboard(this, layoutResId)
             keyboardView.keyboard = keyboard
+
+            val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
+            spaceKey?.label = selectedLanguage
+
+            println("spacekey label=> $spaceKey?.label")
+
             keyboardView.invalidateAllKeys()
 
             // saveLanguagePreference()
@@ -185,6 +193,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             logMessage("Error in onKey: ${error.message}\n$stackTrace")
         }
     }
+
 
     private fun saveLanguagePreference() {
         val sharedPreferences = getSharedPreferences("keyboard_prefs", MODE_PRIVATE)
