@@ -42,6 +42,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     private lateinit var logFile: File
     private var logFileUri: Uri? = null
+    private var currentLang: String? = "English"
+    private var layoutResId: Int = 0
 
 
     override fun onCreate() {
@@ -74,9 +76,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         // initializeLogFile()
 
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
-
-        // loadLanguagePreference()
-
         keyboard = Keyboard(this, R.xml.keyboard_layout)
         keyboardView.keyboard = keyboard
         keyboardView.isPreviewEnabled = false
@@ -84,31 +83,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
         return keyboardView
     }
-
-//    private fun initializeLogFile() {
-//        val logDir = File(getExternalFilesDir(null), "logs")
-//        if (!logDir.exists()) logDir.mkdirs()
-//
-//        val docFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-//
-//        logFile = File(docFolder, "keyboard_log.txt")
-//        try {
-//            if (logFile.exists()) {
-//                logFile.delete()
-//            }
-//            logFile.createNewFile()
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
-
-    //    private fun logMessage(message: String) {
-//        try {
-//            logFile.appendText("$message\n")
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
 
     private fun initializeLogFile() {
         try {
@@ -158,33 +132,22 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         }
     }
 
-    private fun loadLanguagePreference() {
-        val sharedPreferences = getSharedPreferences("keyboard_prefs", MODE_PRIVATE)
-        val selectedLanguage = sharedPreferences.getString("selected_language", "English")
-        println("selected Lang=> $selectedLanguage")
-        currentLanguageIndex = languages.indexOf(selectedLanguage)
-        if (currentLanguageIndex == -1) currentLanguageIndex = 0 // Fallback if saved language is invalid
-    }
-
-
     private fun switchLanguage() {
         try {
             currentLanguageIndex = (currentLanguageIndex + 1) % languages.size
             val selectedLanguage = languages[currentLanguageIndex]
 
-            val layoutResId = languageLayouts[selectedLanguage] ?: R.xml.keyboard_layout
+            layoutResId = languageLayouts[selectedLanguage] ?: R.xml.keyboard_layout
 
             keyboard = Keyboard(this, layoutResId)
             keyboardView.keyboard = keyboard
 
             val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
             spaceKey?.label = selectedLanguage
-
-            println("spacekey label=> $spaceKey?.label")
+            currentLang = selectedLanguage
 
             keyboardView.invalidateAllKeys()
 
-            // saveLanguagePreference()
         } catch (error: Exception) {
             logMessage("Error in onKey: ${error.message}")
             val stackTrace = StringWriter().also {
@@ -194,26 +157,26 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         }
     }
 
+    private fun setCurrentLayout(currentLang: String?) {
+        layoutResId = languageLayouts[currentLang] ?: R.xml.keyboard_layout
+        keyboard = Keyboard(this, layoutResId)
+        keyboardView.keyboard = keyboard
 
-    private fun saveLanguagePreference() {
-        val sharedPreferences = getSharedPreferences("keyboard_prefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("selected_language", languages[currentLanguageIndex])
-        editor.apply()
-        println("CustomKeyboardService=> ${languages[currentLanguageIndex]}")
+        val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
+        spaceKey?.label = currentLang
+
+        keyboardView.invalidateAllKeys()
     }
 
-
-//    override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
-//        super.onStartInputView(info, restarting)
-//        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-//        val params = window?.window?.attributes
-//        if (isPortrait) {
-//            val screenHeight = resources.displayMetrics.heightPixels
-//            val keyboardHeight = (screenHeight * 0.4).toInt() // 40% of the screen height
-//            params?.height = keyboardHeight
-//        }
-//        window?.window?.attributes = params
+//    private fun displayLanguage(keyboard: Keyboard, selectedLanguage: String) {
+//        val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
+//        spaceKey?.label = selectedLanguage
+//    }
+//
+//    private fun getSelectedLanguage(): String {
+//        currentLanguageIndex = (currentLanguageIndex + 1) % languages.size
+//        val selectedLanguage = languages[currentLanguageIndex]
+//        return selectedLanguage
 //    }
 
     @Deprecated("Deprecated in Java", ReplaceWith(""))
@@ -241,9 +204,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
                 Keyboard.KEYCODE_MODE_CHANGE -> {
                     if (isSpecial) {
-                        keyboard = Keyboard(this, R.xml.keyboard_layout)
-                        keyboardView.keyboard = keyboard
                         isSpecial = false
+                        setCurrentLayout(currentLang)
                     } else {
                         keyboard = Keyboard(this, R.xml.keyboard_special_chars)
                         keyboardView.keyboard = keyboard
