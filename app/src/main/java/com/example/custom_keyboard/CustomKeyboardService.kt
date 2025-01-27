@@ -78,6 +78,9 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         keyboard = Keyboard(this, R.xml.keyboard_layout)
         keyboardView.keyboard = keyboard
+        val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
+        spaceKey?.label = currentLang
+
         keyboardView.isPreviewEnabled = false
         keyboardView.setOnKeyboardActionListener(this)
 
@@ -138,7 +141,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             val selectedLanguage = languages[currentLanguageIndex]
 
             layoutResId = languageLayouts[selectedLanguage] ?: R.xml.keyboard_layout
-
             keyboard = Keyboard(this, layoutResId)
             keyboardView.keyboard = keyboard
 
@@ -167,17 +169,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
         keyboardView.invalidateAllKeys()
     }
-
-//    private fun displayLanguage(keyboard: Keyboard, selectedLanguage: String) {
-//        val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
-//        spaceKey?.label = selectedLanguage
-//    }
-//
-//    private fun getSelectedLanguage(): String {
-//        currentLanguageIndex = (currentLanguageIndex + 1) % languages.size
-//        val selectedLanguage = languages[currentLanguageIndex]
-//        return selectedLanguage
-//    }
 
     @Deprecated("Deprecated in Java", ReplaceWith(""))
     override fun onKey(primaryCode: Int, keyCodes: IntArray?) {
