@@ -5,6 +5,6 @@
     android:verticalGap="0px"
     android:keyHeight="@dimen/popup_key_height">
     <Row>
-        <Key android:codes="154" android:keyLabel="&#154;" />
+        <Key android:codes="353" android:keyLabel="&#353;" />
     </Row>
 </Keyboard>
