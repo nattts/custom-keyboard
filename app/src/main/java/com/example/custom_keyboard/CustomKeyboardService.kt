@@ -1,8 +1,6 @@
 @file:Suppress("DEPRECATION")
 package com.example.custom_keyboard
 
-import android.content.ContentUris
-import android.content.ContentValues
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
@@ -11,11 +9,11 @@ import android.view.inputmethod.InputConnection
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.net.Uri
-import android.os.Environment
-import android.provider.MediaStore
-import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
+import com.example.custom_keyboard.utils.logMessage
+import com.example.custom_keyboard.utils.getStackTrace
+import com.example.custom_keyboard.utils.initializeLogFile
 
 class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
     private lateinit var keyboardView: KeyboardView
@@ -33,9 +31,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         "Latvian" to R.xml.latvian_layout
     )
     private val languages = languageLayouts.keys.toList()
-
-    private lateinit var logFile: File
-    private var logFileUri: Uri? = null
+    private val logFileUri: Uri? = null
     private var currentLang: String? = "English"
     private var layoutResId: Int = 0
 
@@ -48,7 +44,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             val writer = StringWriter()
             throwable.printStackTrace(PrintWriter(writer))
             val stackTrace = writer.toString()
-            logMessage("STACK TRACE:\n$stackTrace\n")
+            logMessage(this, logFileUri, "STACK TRACE:\n$stackTrace\n")
         }
 
         soundPool = SoundPool.Builder()
@@ -67,7 +63,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
 
     override fun onCreateInputView(): KeyboardView {
-        initializeLogFile()
+        initializeLogFile(this, logFileUri)
 
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         keyboard = Keyboard(this, R.xml.keyboard_layout)
@@ -79,102 +75,6 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         keyboardView.setOnKeyboardActionListener(this)
 
         return keyboardView
-    }
-
-    private fun initializeLogFile() {
-        try {
-            val fileName = "keyboard_log.txt"
-            val content = "Keyboard session started.\n"
-            val resolver = contentResolver
-
-
-            // Query existing file
-            val existingFileUri = findExistingLogFileUri(fileName)
-
-            println("existingFileUri=> $existingFileUri")
-
-            if (existingFileUri != null) {
-                logFileUri = existingFileUri
-                logMessage("Using existing log file: $logFileUri")
-            } else {
-                // Create new file if it doesn't exist
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
-                    put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain")
-                    put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/KeyboardLogs")
-                }
-
-                logFileUri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-                if (logFileUri != null) {
-                    resolver.openOutputStream(logFileUri!!)?.use { outputStream ->
-                        outputStream.write(content.toByteArray())
-                        outputStream.flush()
-                    }
-                    logMessage("Log file created at: $logFileUri")
-                } else {
-                    logMessage("Failed to create log file URI.")
-                }
-            }
-        } catch (e: Exception) {
-            val stackTrace = StringWriter().also {
-                e.printStackTrace(PrintWriter(it))
-            }.toString()
-            logMessage("Error creating log file: ${e.message}\n$stackTrace")
-        }
-    }
-
-    private fun findExistingLogFileUri(fileName: String): Uri? {
-        val resolver = contentResolver
-        val projection = arrayOf(MediaStore.Files.FileColumns._ID)
-
-        // Fix: Ensure RELATIVE_PATH ends with a slash
-        val relativePath = Environment.DIRECTORY_DOCUMENTS + "/KeyboardLogs/"
-
-        val selection = "${MediaStore.Files.FileColumns.DISPLAY_NAME} = ? AND " +
-                "${MediaStore.Files.FileColumns.RELATIVE_PATH} LIKE ?" // Fix: Use LIKE instead of =
-        val selectionArgs = arrayOf(fileName, "$relativePath%") // Fix: Append %
-
-        println("MediaStore.Files.getContentUri => ${MediaStore.Files.getContentUri("external")}")
-        println("selection => $selection")
-        println("selectionArgs => ${selectionArgs.joinToString()}") // Fix: Print formatted args
-
-        resolver.query(
-            MediaStore.Files.getContentUri("external"),
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )?.use { cursor ->
-            println("cursor count => ${cursor.count}") // Debugging
-
-            if (cursor.moveToFirst()) {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
-                val fileUri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id)
-                println("Found existing log file URI: $fileUri")
-                return fileUri
-            }
-        }
-        return null
-    }
-
-
-
-
-
-    private fun logMessage(message: String) {
-        try {
-            if (logFileUri != null) {
-                val resolver = contentResolver
-                resolver.openOutputStream(logFileUri!!, "wa")?.use { outputStream ->
-                    outputStream.write("$message\n".toByteArray())
-                    outputStream.flush()
-                }
-            } else {
-                println("Log URI is null. Message: $message")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     private fun switchLanguage() {
@@ -193,11 +93,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             keyboardView.invalidateAllKeys()
 
         } catch (error: Exception) {
-            logMessage("Error in onKey: ${error.message}")
-            val stackTrace = StringWriter().also {
-                error.printStackTrace(PrintWriter(it))
-            }.toString()
-            logMessage("Error in onKey: ${error.message}\n$stackTrace")
+            logMessage(this, logFileUri, "Error in switchLanguage: ${error.message}")
+            logMessage(this, logFileUri, "Error switchLanguage stacktrace: ${getStackTrace(error)}")
         }
     }
 
@@ -206,8 +103,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         keyboard = Keyboard(this, layoutResId)
         keyboardView.keyboard = keyboard
 
-        val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
-        spaceKey?.label = currentLang
+            val spaceKey = keyboard.keys.firstOrNull { it.codes.contains(62) }
+            spaceKey?.label = currentLang
 
         keyboardView.invalidateAllKeys()
     }
@@ -271,11 +168,8 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
                 }
             }
         } catch (error: Exception) {
-            logMessage("Error in onKey: ${error.message}")
-            val stackTrace = StringWriter().also {
-                error.printStackTrace(PrintWriter(it))
-            }.toString()
-            logMessage("Error in onKey: ${error.message}\n$stackTrace")
+            logMessage(this, logFileUri, "Error in onKey: ${error.message}")
+            logMessage(this, logFileUri, "Error in onKey stacktrace: ${getStackTrace(error)}")
         }
     }
 
