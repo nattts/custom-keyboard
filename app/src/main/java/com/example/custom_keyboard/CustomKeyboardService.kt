@@ -1,11 +1,8 @@
 @file:Suppress("DEPRECATION")
 package com.example.custom_keyboard
 
-import android.app.Activity
+import android.content.ContentUris
 import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
@@ -14,11 +11,8 @@ import android.view.inputmethod.InputConnection
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.provider.Settings
-import androidx.core.app.ActivityCompat
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -73,7 +67,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
 
     override fun onCreateInputView(): KeyboardView {
-        // initializeLogFile()
+        initializeLogFile()
 
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         keyboard = Keyboard(this, R.xml.keyboard_layout)
@@ -91,23 +85,35 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
         try {
             val fileName = "keyboard_log.txt"
             val content = "Keyboard session started.\n"
-
             val resolver = contentResolver
-            val contentValues = ContentValues().apply {
-                put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain")
-                put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/KeyboardLogs")
-            }
 
-            logFileUri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-            if (logFileUri != null) {
-                resolver.openOutputStream(logFileUri!!)?.use { outputStream ->
-                    outputStream.write(content.toByteArray())
-                    outputStream.flush()
-                }
-                logMessage("Log file created at: $logFileUri")
+
+            // Query existing file
+            val existingFileUri = findExistingLogFileUri(fileName)
+
+            println("existingFileUri=> $existingFileUri")
+
+            if (existingFileUri != null) {
+                logFileUri = existingFileUri
+                logMessage("Using existing log file: $logFileUri")
             } else {
-                logMessage("Failed to create log file URI.")
+                // Create new file if it doesn't exist
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.Files.FileColumns.MIME_TYPE, "text/plain")
+                    put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS + "/KeyboardLogs")
+                }
+
+                logFileUri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+                if (logFileUri != null) {
+                    resolver.openOutputStream(logFileUri!!)?.use { outputStream ->
+                        outputStream.write(content.toByteArray())
+                        outputStream.flush()
+                    }
+                    logMessage("Log file created at: $logFileUri")
+                } else {
+                    logMessage("Failed to create log file URI.")
+                }
             }
         } catch (e: Exception) {
             val stackTrace = StringWriter().also {
@@ -116,6 +122,42 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             logMessage("Error creating log file: ${e.message}\n$stackTrace")
         }
     }
+
+    private fun findExistingLogFileUri(fileName: String): Uri? {
+        val resolver = contentResolver
+        val projection = arrayOf(MediaStore.Files.FileColumns._ID)
+
+        // Fix: Ensure RELATIVE_PATH ends with a slash
+        val relativePath = Environment.DIRECTORY_DOCUMENTS + "/KeyboardLogs/"
+
+        val selection = "${MediaStore.Files.FileColumns.DISPLAY_NAME} = ? AND " +
+                "${MediaStore.Files.FileColumns.RELATIVE_PATH} LIKE ?" // Fix: Use LIKE instead of =
+        val selectionArgs = arrayOf(fileName, "$relativePath%") // Fix: Append %
+
+        println("MediaStore.Files.getContentUri => ${MediaStore.Files.getContentUri("external")}")
+        println("selection => $selection")
+        println("selectionArgs => ${selectionArgs.joinToString()}") // Fix: Print formatted args
+
+        resolver.query(
+            MediaStore.Files.getContentUri("external"),
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )?.use { cursor ->
+            println("cursor count => ${cursor.count}") // Debugging
+
+            if (cursor.moveToFirst()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
+                val fileUri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id)
+                println("Found existing log file URI: $fileUri")
+                return fileUri
+            }
+        }
+        return null
+    }
+
+
 
 
 
