@@ -4,16 +4,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#343d46">
 
-    <EditText
-        android:id="@+id/input_field"
+    <Space
         android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/text_view_id"
         android:layout_height="wrap_content"
-        android:autofillHints="none"
-        android:inputType="text"
-        android:hint="@string/enter_text"
-        android:layout_marginTop="350dp"
-        android:padding="12dp" />
+        android:layout_width="match_parent"
+        android:text="typing sound" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="194dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_tactile_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tactile 3" />
+        <RadioButton
+            android:id="@+id/radio_tactile_14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tactile 14" />
+        <RadioButton
+            android:id="@+id/radio_tactile_15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tactile 15" />
+
+        <EditText
+            android:id="@+id/input_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:autofillHints="none"
+            android:background="#e1dcd4"
+            android:hint="@string/enter_text"
+            android:inputType="text"
+            android:textColor="#343d46" />
+    </RadioGroup>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

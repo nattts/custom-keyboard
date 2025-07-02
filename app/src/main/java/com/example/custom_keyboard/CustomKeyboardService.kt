@@ -51,10 +51,9 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
             .setMaxStreams(5) // Number of simultaneous sounds
             .build()
         try {
-            // soundId = soundPool.load(this, R.raw.typewriter, 1)
-            // soundId = soundPool.load(this, R.raw.keyboard_tactile_3, 1)
+            soundId = soundPool.load(this, R.raw.keyboard_tactile_3, 1)
             // soundId = soundPool.load(this, R.raw.keyboard_tactile_14, 1)
-            soundId = soundPool.load(this, R.raw.keyboard_tactile_15, 1)
+            // soundId = soundPool.load(this, R.raw.keyboard_tactile_15, 1)
         } catch (e: Exception) {
             e.printStackTrace()
             keySound = null
@@ -64,6 +63,7 @@ class CustomKeyboardService : InputMethodService(), KeyboardView.OnKeyboardActio
 
     override fun onCreateInputView(): KeyboardView {
         initializeLogFile(this, logFileUri)
+        println("onCreateInputView => ")
 
         keyboardView = layoutInflater.inflate(R.layout.keyboard_view, null) as KeyboardView
         keyboard = Keyboard(this, R.xml.keyboard_layout)

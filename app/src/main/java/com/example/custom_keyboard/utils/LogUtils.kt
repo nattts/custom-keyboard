@@ -84,7 +84,9 @@ private fun findExistingLogFileUri(context: Context, fileName: String): Uri? {
         selectionArgs,
         null
     )?.use { cursor ->
-        println("cursor count => ${cursor.count}") // Debugging
+        println("cursor => $cursor")
+        println("cursor count => ${cursor.count}")
+
 
         if (cursor.moveToFirst()) {
             val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns._ID))
