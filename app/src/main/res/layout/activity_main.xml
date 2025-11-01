@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#343d46">
+    android:background="#343d46"
+    android:orientation="vertical">
 
     <Space
         android:layout_width="match_parent"
@@ -13,11 +12,12 @@
 
     <TextView
         android:id="@+id/text_view_id"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="typing sound" />
 
     <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="194dp"
         android:orientation="vertical">
@@ -27,11 +27,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="tactile 3" />
+
         <RadioButton
             android:id="@+id/radio_tactile_14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="tactile 14" />
+
         <RadioButton
             android:id="@+id/radio_tactile_15"
             android:layout_width="match_parent"
